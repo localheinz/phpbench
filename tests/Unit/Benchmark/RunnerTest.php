@@ -10,7 +10,7 @@
  *
  */
 
-namespace PhpBench\Tests\Benchmark;
+namespace PhpBench\Tests\Unit\Benchmark;
 
 use PhpBench\Benchmark\BenchmarkFinder;
 use PhpBench\Benchmark\ExecutorInterface;
@@ -30,9 +30,60 @@ use PhpBench\Registry\ConfigurableRegistry;
 use PhpBench\Tests\Util\TestUtil;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use PhpBench\Assertion\AsserterRegistry;
 
 class RunnerTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy
+     */
+    private $benchmarkFinder;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $suite;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $benchmark;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $executor;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $executorRegistry;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $asserterRegistry;
+
+    /**
+     * @var Config
+     */
+    private $executorConfig;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $envSupplier;
+
+    /**
+     * @var ArrayObject
+     */
+    private $informations;
+
+    /**
+     * @var Runner
+     */
+    private $runner;
+
     public function setUp()
     {
         $this->benchmarkFinder = $this->prophesize(BenchmarkFinder::class);
@@ -43,6 +94,7 @@ class RunnerTest extends TestCase
         ]);
         $this->executor = $this->prophesize(ExecutorInterface::class);
         $this->executorRegistry = $this->prophesize(ConfigurableRegistry::class);
+        $this->asserterRegistry = $this->prophesize(AsserterRegistry::class);
         $this->executorConfig = new Config('test', ['executor' => 'microtime']);
         $this->envSupplier = $this->prophesize(Supplier::class);
         $this->informations = new \ArrayObject();
@@ -52,6 +104,7 @@ class RunnerTest extends TestCase
             $this->benchmarkFinder->reveal(),
             $this->executorRegistry->reveal(),
             $this->envSupplier->reveal(),
+            $this->asserterRegistry->reveal(),
             null,
             null
         );
@@ -426,3 +479,4 @@ class RunnerTest extends TestCase
 class RunnerTestBenchCase
 {
 }
+
