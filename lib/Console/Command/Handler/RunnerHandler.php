@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use PhpBench\Model\Suite;
 
 class RunnerHandler
 {
@@ -61,7 +62,7 @@ class RunnerHandler
         $command->addOption('php-wrapper', null, InputOption::VALUE_REQUIRED, 'Prefix process launch command with this string');
     }
 
-    public function runFromInput(InputInterface $input, OutputInterface $output, array $options = [])
+    public function runFromInput(InputInterface $input, OutputInterface $output, array $options = []): Suite
     {
         $context = new RunnerContext(
             $input->getArgument('path') ?: $this->benchPath,
