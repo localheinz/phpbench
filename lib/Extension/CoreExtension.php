@@ -78,7 +78,7 @@ use Hoa\Ruler\Ruler;
 use PhpBench\Benchmark\Asserter\SymfonyAsserter;
 use PhpBench\Assertion\AsserterRegistry;
 use PhpBench\Assertion\ComparatorAsserter;
-use PhpBench\Assertion\Assertion;
+use PhpBench\Assertion\AssertionProcessor;
 
 class CoreExtension implements ExtensionInterface
 {
@@ -153,7 +153,7 @@ class CoreExtension implements ExtensionInterface
                 $container->get('benchmark.benchmark_finder'),
                 $container->get('benchmark.registry.executor'),
                 $container->get('environment.supplier'),
-                $container->get('assertion.assertion'),
+                $container->get('assertion.assertion_processor'),
                 $container->getParameter('retry_threshold'),
                 $container->getParameter('config_path')
             );
@@ -434,8 +434,11 @@ class CoreExtension implements ExtensionInterface
 
     private function registerAsserters(Container $container)
     {
-        $container->register('assertion.assertion', function () use ($container) {
-            return new Assertion($container->get('assertion.registry'));
+        $container->register('assertion.assertion_processor', function () use ($container) {
+            return new AssertionProcessor(
+                $container->get('assertion.registry'),
+                $container->get('json.decoder')
+            );
         });
         $container->register('assertion.asserter.comparator', function () {
             return new ComparatorAsserter();
