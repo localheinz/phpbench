@@ -31,6 +31,7 @@ use PhpBench\Tests\Util\TestUtil;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use PhpBench\Assertion\AsserterRegistry;
+use PhpBench\Assertion\Assertion;
 
 class RunnerTest extends TestCase
 {
@@ -62,7 +63,7 @@ class RunnerTest extends TestCase
     /**
      * @var ObjectProphecy
      */
-    private $asserterRegistry;
+    private $assertion;
 
     /**
      * @var Config
@@ -94,7 +95,7 @@ class RunnerTest extends TestCase
         ]);
         $this->executor = $this->prophesize(ExecutorInterface::class);
         $this->executorRegistry = $this->prophesize(ConfigurableRegistry::class);
-        $this->asserterRegistry = $this->prophesize(AsserterRegistry::class);
+        $this->assertion = $this->prophesize(Assertion::class);
         $this->executorConfig = new Config('test', ['executor' => 'microtime']);
         $this->envSupplier = $this->prophesize(Supplier::class);
         $this->informations = new \ArrayObject();
@@ -104,7 +105,7 @@ class RunnerTest extends TestCase
             $this->benchmarkFinder->reveal(),
             $this->executorRegistry->reveal(),
             $this->envSupplier->reveal(),
-            $this->asserterRegistry->reveal(),
+            $this->assertion->reveal(),
             null,
             null
         );
